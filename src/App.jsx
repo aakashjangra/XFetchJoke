@@ -18,6 +18,7 @@ function App() {
       const data = await res.json();
       setJoke({ setup: data.setup, punchline: data.punchline });
     } catch (err) {
+      console.error("Joke fetch failed:", err);
       setJoke(null);
       setError(true);
     } finally {
@@ -25,11 +26,7 @@ function App() {
     }
   };
 
-  const buttonLabel = loading
-    ? "Fetching..."
-    : error
-    ? "Try again"
-    : "Fetch joke";
+  const buttonLabel = loading ? "Fetching..." : "Fetch joke";
 
   return (
     <div className="app">
@@ -55,6 +52,12 @@ function App() {
       <button onClick={fetchJoke} disabled={loading}>
         {buttonLabel}
       </button>
+
+      {error && !loading && (
+        <button onClick={fetchJoke} className="retry">
+          Try again
+        </button>
+      )}
     </div>
   );
 }
